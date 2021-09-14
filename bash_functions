@@ -1,132 +1,142 @@
-## Set the title of the current terminal
-
-function set-title(){
-      if [[ -z "$ORIG" ]]; then
-              ORIG=$PS1
-                fi
-                  TITLE="\[\e]2;$*\a\]"
-                    PS1=${ORIG}${TITLE}
-                }
-
-function defaultTitle(){
-    if [[ $(whoami) == "arvind" ]]
+function toggleTouchpad(){
+    if [[ $(synclient | grep "TouchpadOff" | sed "s/[^0-9]//g") == 1 ]]
         then
-        echo "Enter title choice"
-            read choice
-            if [ ! -z choice ]
-                then
-                    set-title $choice
-                    if [[ $choice == *"minicom"* ]]
-                        then
-                            set-title "minicom"
-                            echo "econsys" | sudo -S minicom
-                    elif [[ $choice == *"logicpdBuild"* ]]
-                            then
-                            source ~/esomimx6_aosp/device/econ/pd67/env.sh
-                    fi
-            fi
-    fi
-}
-
-
-
-
-## Parse the branch name
-parse_git_branch() {
-     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
-}
-
-## force kill a task with its name
-fkill(){
-    kill -9 $(pgrep $1 )
-}
-
-
-##Perform the initalisations of Midtronics
-
-setupMidtronics(){
-    cd ~/DSS5000_kk
-    export PATH=/opt/java/jdk1.6.0_33/bin:$PATH
-    export JAVA_HOME=/opt/java/jdk1.6.0_33
-    source build/envsetup.sh
-    if [ $# = 1 ]
-    then
-        lunch $1-eng
+            synclient TouchpadOff=0;synclient TouchpadOff=0
     else
-        lunch dss5000-eng
-    fi
-    set-title "dss5000Build"
+        synclient TouchpadOff=1;synclient TouchpadOff=1
+            fi
 }
-setupLogicpd(){
-    cd ~/esomimx6_aosp
-    source device/econ/pd67/env.sh
-    set-title "pd67BuildTerm"
-    }
-
-minicom(){
-   echo 'econsys' | sudo -S minicom $(echo '$(@:2)')
+parse_git_branch() {
+  git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
 }
-
-alarm(){
-
-echo "alarm is set for $1"
-echo "message is $2"
-
-while [ 1 ]
-    do
-    if [[ $(date +%T) == "$1" ]]
+function 7yuv(){
+    /home/arvind/bin/7yuv-2.5/7yuv $1
+ }
+function set-title(){
+  if [[ -z "$ORIG" ]]; then
+    ORIG="$PS1"
+  fi
+  TITLE="\[\e]2;$*\a\]"
+  PS1="${ORIG}${TITLE}"
+}
+redshiftControl(){
+    if [ -z $(pgrep redshift) ];
     then
-        if [ $# -gt 1 ]
-        then
-            notify-send "Alarm alarm"
-        else
-            notify-send "$2"
-        fi
-        break
+        redshift > /dev/null 2>&1  &     
+    else
+        pkill redshift
     fi
+}
+opencvBuild(){
+export LD_LIBRARY_PATH="/home/arvind/coding/vision/installation/OpenCV-3.4.4/lib/"
+g++ $1 -o $2 -L. -lopencv_core `pkg-config --cflags --libs opencv`
+}
+
+pushLinksRepo(){
+	mv ~/Downloads/index.html /home/arvind/coding/repos/links/
+	cd /home/arvind/coding/repos/links/
+	git add index.html
+	git commit -m "Updated links" 
+	git push origin master 
+	cd -
+}
+
+
+function vikaashRssh(){
+if [ $# -eq 0 ]
+then
+ssh -N -o ServerAliveInterval=240 -R 43022:localhost:22  root@134.122.30.170
+else
+ssh -N -o ServerAliveInterval=240 -R $1:localhost:22  root@134.122.30.170
+fi
+}
+
+
+function arvindRssh(){
+if [ $# -eq 0 ]
+then
+ssh -N -o ServerAliveInterval=240 -R 43026:localhost:22  root@165.22.215.145
+else
+ssh -N -o ServerAliveInterval=240 -R $1:localhost:22  root@165.22.215.145
+fi
+}
+
+
+get_crtime() {
+
+    for target in "${@}"; do
+        inode=$(stat -c '%i' "${target}")
+        fs=$(df  --output=source "${target}"  | tail -1)
+        crtime=$(sudo debugfs -R 'stat <'"${inode}"'>' "${fs}" 2>/dev/null | 
+        grep -oP 'crtime.*--\s*\K.*')
+        printf "%s\t%s\n" "${target}" "${crtime}"
     done
 }
 
-function keyevent(){
-    adb shell input keyevent $1
+pKill(){
+	pgrep $1 | xargs kill -9
+}
+getfromsan(){
+	FILE_PATH=$1
+	FILE_NAME=$(echo "$FILE_PATH" | rev | cut -d '/' -f1 | rev)
+	echo "File name is $FILE_NAME"
+	ssh -t root@165.22.215.145 scp -P 43027 -r androidbuild@localhost:$1 .
+	scp -r root@165.22.215.145:$FILE_NAME .
 }
 
-function buildOpencvApp(){
-    export LD_LIBRARY_PATH="/home/arvind/econ/hackathon/2019/installation/OpenCV-3.4.4/lib/"
-    g++ $*  -lopencv_core `pkg-config --cflags --libs opencv`
+scpTosan(){
+	FILE_PATH=$1
+	DEST_PATH=$2
+	FILE_NAME=$(echo "$FILE_PATH" | rev | cut -d '/' -f1 | rev)
+	echo "File name is $FILE_NAME"
+	scp -r $FILE_NAME root@165.22.215.145: 
+	ssh -t root@165.22.215.145 scp -P 43027 -r $1 androidbuild@localhost:$2
 }
 
-function cutTimestamp(){
-    cut -d ' ' -f3- $1
-}
-function rockchipMinicom(){
-    sudo minicom -D /dev/ttyUSB0 -w --capturefile=minicomLogs/minicom_$(date +%d-%M-%Y).cap -s rockchip
-}
-function updateLinkRepository(){
-    git pull origin master
-    mv ~/Downloads/index.html .
-    git add -u
-    git commit -m "Added a link"
-    git push origin master
-    git show HEAD
+scpTobuildpc1(){
+	FILE_PATH=$1
+	DEST_PATH=$2
+	FILE_NAME=$(echo "$FILE_PATH" | rev | cut -d '/' -f1 | rev)
+	echo "File name is $FILE_NAME"
+	scp -r $FILE_NAME root@165.22.215.145: 
+	ssh -t root@165.22.215.145 scp -P 43024 -r $1 android-build@localhost:$2 
 }
 
-function initTimewarriorHooks(){
-    task config uda.totalactivetime.type duration
-    task config uda.totalactivetime.label Total active time
-    task config uda.totalactivetime.values ''
-
-
-    task config report.list.labels 'ID,Active,Age,Time Spent,...,Urg'
-    task config report.list.labels 'id,start.age,entry.age,totalactivetime,...,urgency'
-
+getfrombuildpc1(){
+	FILE_PATH=$1
+	FILE_NAME=$(echo "$FILE_PATH" | rev | cut -d '/' -f1 | rev)
+	echo "File name is $FILE_NAME"
+	ssh -t root@165.22.215.145 scp -P 43024 -r android-build@localhost:$1 .
+	scp -r root@165.22.215.145:$FILE_NAME .
 }
 
-function code42(){
-    alias mcuProj="cd /home/arvind/econ/projects/code42/tasks/mcu/tools/projects"
-    alias sampleProj="cd /home/arvind/STM32Cube/Repository/STM32Cube_FW_F7_V1.16.0/Projects/STM32F767ZI-Nucleo/Examples"
-    alias docs="nautilus /home/arvind/econ/projects/code42/documents/"
-    alias nanoTask="cd /home/arvind/econ/projects/code42/tasks/nano/"
-    alias croot="/home/arvind/econ/projects/code42"
-    cd /home/arvind/econ/projects/code42
+gitshortcuts(){
+	alias gs="git status $*"
+        alias gl="git log $*"
+        alias gc="git checkout $*"
+	alias gb="git branch $*"       
 }
+
+buildpclogin(){
+	ifconfig ppp0 > /dev/null 2>&1
+	if [ $? -eq 0 ] 
+	then
+		echo "Logging through VPN!!"
+		ssh -X android-build@192.168.7.98
+	else
+		echo "Logging through VPS!!"
+		ssh -Xt root@165.22.215.145 ssh -X android-build@localhost -p 43024
+	fi
+}
+
+cconvert() {
+       curl -s "http://www.google.com/finance/converter?a=$1&from=$2&to=$3" | sed '/res/!d;s/<[^>]*>//g';
+}
+csbuild() {
+    local PROJDIR=$PWD
+    cd /
+    find $PROJDIR -name "*.c" -o -name "*.h" > $PROJDIR/cscope.files
+    cd $PROJDIR
+    cscope -Rbkq
+}
+

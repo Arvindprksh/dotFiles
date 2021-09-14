@@ -16,8 +16,8 @@ HISTCONTROL=ignoreboth
 shopt -s histappend
 
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=10000
-HISTFILESIZE=20000
+HISTSIZE=1000
+HISTFILESIZE=2000
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -59,7 +59,7 @@ fi
 if [ "$color_prompt" = yes ]; then
     PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 else
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi
 unset color_prompt force_color_prompt
 
@@ -116,99 +116,86 @@ if ! shopt -oq posix; then
   fi
 fi
 
-export HOME="/home/$(whoami)"
+source ~/.bash_functions
+source ~/.bash_aliases
+alias sourceBash="source ~/.bashrc"
+#export PS1="\[\e]0; \u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;34m\][\D{%T}] \[\033[00m\]\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]$\[\033[36m\]\$(parse_git_branch)\[\033[00m\] "
+export PS1="\[\e]0; \u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]$\[\033[36m\]\$(parse_git_branch)\[\033[00m\] "
 
-source /home/arvind/.bash_functions
-source /home/arvind/.bash_aliases
-
-cde(){ cd $1 && ls; } ;
-
-
-
-# get current branch in git repo
-function parse_git_branch() {
-	BRANCH=`git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'`
-	if [ ! "${BRANCH}" == "" ]
-	then
-		#STAT=`parse_git_dirty`
-		echo "[${BRANCH}${STAT}]"
-	else
-		echo ""
-	fi
-}
-
-# get current status of git repo
-function parse_git_dirty {
-	status=`git status 2>&1 | tee`
-	dirty=`echo -n "${status}" 2> /dev/null | grep "modified:" &> /dev/null; echo "$?"`
-	untracked=`echo -n "${status}" 2> /dev/null | grep "Untracked files" &> /dev/null; echo "$?"`
-	ahead=`echo -n "${status}" 2> /dev/null | grep "Your branch is ahead of" &> /dev/null; echo "$?"`
-	newfile=`echo -n "${status}" 2> /dev/null | grep "new file:" &> /dev/null; echo "$?"`
-	renamed=`echo -n "${status}" 2> /dev/null | grep "renamed:" &> /dev/null; echo "$?"`
-	deleted=`echo -n "${status}" 2> /dev/null | grep "deleted:" &> /dev/null; echo "$?"`
-	bits=''
-	if [ "${renamed}" == "0" ]; then
-		bits=">${bits}"
-	fi
-	if [ "${ahead}" == "0" ]; then
-		bits="*${bits}"
-	fi
-	if [ "${newfile}" == "0" ]; then
-		bits="+${bits}"
-	fi
-	if [ "${untracked}" == "0" ]; then
-		bits="?${bits}"
-	fi
-	if [ "${deleted}" == "0" ]; then
-		bits="x${bits}"
-	fi
-	if [ "${dirty}" == "0" ]; then
-		bits="!${bits}"
-	fi
-	if [ ! "${bits}" == "" ]; then
-		echo " ${bits}"
-	else
-		echo ""
-	fi
-}
+export PATH="$PATH:/usr/local/MATLAB/R2017a/bin:/usr/local/go/bin:/home/arvind/bin/7yuv-2.5/:/usr/local/cuda-10.1/bin:$HOME/.vim/plugin"
+export LD_LIBRARY_PATH=/usr/local/cuda-10.1/lib64:/usr/local/lib/:$LD_LIBRARY_PATH
+export GOBIN="/home/arvind/coding/go/out"
+#source /opt/ros/kinetic/setup.bash
+#source /home/arvind/coding/robotics/catkin_ws/devel/setup.bash
+PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/lib/x86_64-linux-gnu/pkgconfig/:/usr/local/lib/pkgconfig:/home/arvind/coding/vision/installation/OpenCV-3.4.4/lib/pkgconfig/
 
 
+export PKG_CONFIG_PATH
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/taraxl-sdk/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/taraxl-pcl/lib
+source ~/.cargo/env
 
-
-    if [  $(printenv DISPLAY) == ":0" ]
-    then
-        #export PS1="\[\033[1;34m\][\t]\[\033[0m\]\[\033[1;33m\u\033[0m\] \[\033[1;31m\]\w\033[00m $\[\033[33m\]\$(parse_git_branch)\[\033[00m\]"
-        #defaultTitle && clear
-        export PS1="\[\e[1;34m\][\[\e[m\]\[\e[1;34m\]\t\[\e[m\]\[\e[1;34m\]]\[\e[m\] \[\e[1;33m\]\u\[\e[m\] \[\e[1;36m\]\w\[\e[m\]\[\e[1;32m\]\`parse_git_branch\`\[\e[m\] \\$ "
-    else
-        export PS1="\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$"
-    fi
-
-
-
-HISTSIZE=-1
-HISTFILESIZE=-1
-
-export PATH="$PATH:/home/arvind/bin/7yuv_2.4_amd64/opt/Datahammer_7yuv:/home/arvind/econ/tools/dex2jar-2.0/:/home/arvind/econ/scripts/:/home/arvind/econ/tools/python3.7/Python-3.7.1"
-export NDK="/home/arvind/econ/AI/android-ndk-r16b/"
-#export PATH="$PATH:/home/arvind/econ/tools/arm_toolchain_4.8/arm_toolchain_4.8/bin:"
-#cd aliases
-#alias setTitle="setTitle"
-export HISTTIMEFORMAT="%d/%m/%y %T "
-
-export PATH="$PATH:/opt/mssql-tools/bin"
-export PKG_CONFIG_PATH="/home/arvind/econ/hackathon/2019/installation/OpenCV-3.4.4/lib/pkgconfig/$PKG_CONFIG_PATH"
-#export $PKG_CONFIG_PATH
-source /opt/ros/kinetic/setup.bash
-export PATH=$PATH:/opt/Atollic_TrueSTUDIO_for_STM32_x86_64_9.3.0/ide/:/usr/local/tara-sdk/bin:/home/arvind/econ/projects/infomark/tools/firmwareUpgrade/Linux_Upgrade_Tool/Linux_Upgrade_Tool/
-
-#initTimewarriorHooks
+## Colors?  Used for the prompt.
+#Regular text color
+BLACK='\[\e[0;30m\]'
+#Bold text color
+BBLACK='\[\e[1;30m\]'
+#background color
+BGBLACK='\[\e[40m\]'
+RED='\[\e[0;31m\]'
+BRED='\[\e[1;31m\]'
+BGRED='\[\e[41m\]'
+GREEN='\[\e[0;32m\]'
+BGREEN='\[\e[1;32m\]'
+BGGREEN='\[\e[1;32m\]'
+YELLOW='\[\e[0;33m\]'
+BYELLOW='\[\e[1;33m\]'
+BGYELLOW='\[\e[1;33m\]'
+BLUE='\[\e[0;34m\]'
+BBLUE='\[\e[1;34m\]'
+BGBLUE='\[\e[1;34m\]'
+MAGENTA='\[\e[0;35m\]'
+BMAGENTA='\[\e[1;35m\]'
+BGMAGENTA='\[\e[1;35m\]'
+CYAN='\[\e[0;36m\]'
+BCYAN='\[\e[1;36m\]'
+BGCYAN='\[\e[1;36m\]'
+WHITE='\[\e[0;37m\]'
+BWHITE='\[\e[1;37m\]'
+BGWHITE='\[\e[1;37m\]'
 
 function _update_ps1() {
     PS1=$(powerline-shell $?)
 }
 
-if [[ $TERM != linux && ! $PROMPT_COMMAND =~ _update_ps1 ]]; then
-    PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
+#if [[ $TERM != linux && ! $PROMPT_COMMAND =~ _update_ps1 ]]; then
+#    PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
+#fi
+
+
+if [ "$TERM" = "xterm-256color" ]; then
+  xprop \
+    -id $(xdotool getactivewindow) \
+    -f _MOTIF_WM_HINTS 32c \
+    -set _MOTIF_WM_HINTS "0x2, 0x0, 0x0, 0x0, 0x0"
 fi
 
+
+export CSCOPE_EDITOR=`which gvim`
+
+
+## >>> conda initialize >>>
+## !! Contents within this block are managed by 'conda init' !!
+#__conda_setup="$('/home/arvind/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+#if [ $? -eq 0 ]; then
+#    eval "$__conda_setup"
+#else
+#    if [ -f "/home/arvind/anaconda3/etc/profile.d/conda.sh" ]; then
+#        . "/home/arvind/anaconda3/etc/profile.d/conda.sh"
+#    else
+#        export PATH="/home/arvind/anaconda3/bin:$PATH"
+#    fi
+#fi
+#unset __conda_setup
+## <<< conda initialize <<<
+#
