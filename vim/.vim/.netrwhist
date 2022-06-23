@@ -1,5 +1,9 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =3
-let g:netrw_dirhist_1='/home/arvind'
-let g:netrw_dirhist_2='/home/arvind/econ/projects/asi_datamyte/tasks/mtp/libmtp-1.1.15/examples'
-let g:netrw_dirhist_3='/home/arvind/econ/projects/asi_datamyte/tasks/mtp/libmtp-1.1.15'
+let g:netrw_dirhistcnt =7
+let g:netrw_dirhist_7='/home/arvind'
+let g:netrw_dirhist_6='/home/arvind/ncsu/courses/ece592/xinu/src/xinu/system'
+let g:netrw_dirhist_5='/home/arvind/.ssh'
+let g:netrw_dirhist_4='/home/arvind/ncsu/courses/ece563/project1/read-trace'
+let g:netrw_dirhist_3='/home/arvind/Downloads/varoon/563_project_final'
+let g:netrw_dirhist_2='/home/arvind/Downloads/varoon'
+let g:netrw_dirhist_1='/home/arvind/.vim'

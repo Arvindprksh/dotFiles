@@ -175,14 +175,14 @@ function parse_git_dirty {
 
 
 
-    if [  $(printenv DISPLAY) == ":0" ]
-    then
+   # if [  $(printenv DISPLAY) == ":0" ]
+   # then
         #export PS1="\[\033[1;34m\][\t]\[\033[0m\]\[\033[1;33m\u\033[0m\] \[\033[1;31m\]\w\033[00m $\[\033[33m\]\$(parse_git_branch)\[\033[00m\]"
         #defaultTitle && clear
         export PS1="\[\e[1;34m\][\[\e[m\]\[\e[1;34m\]\t\[\e[m\]\[\e[1;34m\]]\[\e[m\] \[\e[1;33m\]\u\[\e[m\] \[\e[1;36m\]\w\[\e[m\]\[\e[1;32m\]\`parse_git_branch\`\[\e[m\] \\$ "
-    else
-        export PS1="\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$"
-    fi
+#    else
+ #       export PS1="\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$"
+  #  fi
 
 
 
@@ -196,19 +196,34 @@ export NDK="/home/arvind/econ/AI/android-ndk-r16b/"
 #alias setTitle="setTitle"
 export HISTTIMEFORMAT="%d/%m/%y %T "
 
-export PATH="$PATH:/opt/mssql-tools/bin"
+export PATH="$PATH:/home/arvind/.local/bin/"
 export PKG_CONFIG_PATH="/home/arvind/econ/hackathon/2019/installation/OpenCV-3.4.4/lib/pkgconfig/$PKG_CONFIG_PATH"
 #export $PKG_CONFIG_PATH
-source /opt/ros/kinetic/setup.bash
-export PATH=$PATH:/opt/Atollic_TrueSTUDIO_for_STM32_x86_64_9.3.0/ide/:/usr/local/tara-sdk/bin:/home/arvind/econ/projects/infomark/tools/firmwareUpgrade/Linux_Upgrade_Tool/Linux_Upgrade_Tool/
 
 #initTimewarriorHooks
 
-function _update_ps1() {
-    PS1=$(powerline-shell $?)
-}
+#function _update_ps1() {
+ #   PS1=$(powerline-shell $?)
+#}
 
-if [[ $TERM != linux && ! $PROMPT_COMMAND =~ _update_ps1 ]]; then
-    PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
-fi
+#if [[ $TERM != linux && ! $PROMPT_COMMAND =~ _update_ps1 ]]; then
+#    PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
+#fi
+#. "$HOME/.cargo/env"
+
+
+#if [ -f `which powerline-daemon` ]; then
+#  powerline-daemon -q
+#  POWERLINE_BASH_CONTINUATION=1
+#  POWERLINE_BASH_SELECT=1
+#  . /usr/share/powerline/bash/powerline.sh
+#fi
+export PATH="/home/arvind/Downloads/clion/clion-2021.3.2/bin:/home/arvind/.local/bin:$PATH"
+export EDITOR=vim
+
+. /etc/profile.d/vte.sh
+#newgrp docker
+
+export NVIM_PYTHON_LOG_FILE=/home/arvind/.nvimlog
+
 

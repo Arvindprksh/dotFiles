@@ -1,7 +1,7 @@
 alias LS='ls'
 alias shcode='cd ~/personal/sh'
-alias ccode='cd ~/personal/c'
-alias nautilus="echo "econsys" | sudo -S nautilus ."
+alias ccode='cd ~/coding/c'
+alias cppcode='cd ~/coding/cpp'
 alias sfastboot='sudo fastboot flash boot'
 alias purple='cd ~/econ/projects/purple/'
 alias midtronics='cd ~/econ/projects/midtronics/'
@@ -13,7 +13,7 @@ alias ...="cd ../../"
 alias sessionCode="cd ~/personal/session/"
 alias sl="ls"
 alias nodejsExport="export PATH=$PATH:/home/arvind/econ/tools/node-v8.9.0-linux-x64/bin"
-
+alias clear="clear -x"
 #alias setupMidtronics="cd ~/DSS5000_kk && export PATH=/opt/java/jdk1.6.0_33/bin:$PATH && export JAVA_HOME=/opt/java/jdk1.6.0_33 && source ~/DSS5000_kk/build/envsetup.sh && lunch dss5000-eng "
 
 alias buildUboot="cd ~/DSS5000_kk && export ARCH=arm && export CROSS_COMPILE='~/DSS5000_kk/prebuilts/gcc/linux-x86/arm/arm-eabi-4.6/bin/arm-eabi-' && cd bootable/bootloader/uboot-imx && make clean;make dss5000_android_config;make"
@@ -38,7 +38,7 @@ alias sourceBash="source ~/.bashrc"
 alias cpuTemp="adb shell 'while [ 1 ] ; do  date +%T && cat /sys/class/thermal/thermal_zone0/temp ; sleep 3 ; done'"
 alias oldPs1='export PS1="\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$"'
 alias buildPc2="ssh -X android-build@192.168.7.97"
-alias clear="xdotool key ctrl+l"
+#alias clear="xdotool key ctrl+l"
 alias pd67="cd ~/esomimx6_aosp"
 
 # Flash images present in Desktop
@@ -75,3 +75,25 @@ alias hopper="/opt/hopper-v4/bin/Hopper"
 alias remSwap="find . -iname '.*.sw*' | xargs rm -rf "
 alias vishnupc="sshpass -p 'econsys' ssh -X econsys8@192.168.7.228"
 alias openfile="xdg-open $1"
+############################################################################
+# NCSU
+############################################################################
+alias xinuCode="cd /home/arvind/ncsu/courses/ece592/xinu/src/xinu"
+alias itre="cd /home/arvind/ncsu/itre"
+##############################################################################
+
+alias sheets="/home/arvind/ncsu/GoogleSheetsSign-in-linux-x64/GoogleSheetsSign-in"
+
+
+alias remorbittykey="ssh-keygen -f \"/home/arvind/.ssh/known_hosts\" -R \"192.168.7.2\""
+
+alias logseq="/home/arvind/Downloads/appImages/Logseq-linux-x64-0.5.4.AppImage > /dev/null &2>1  & "
+alias compilers="cd /home/arvind/ncsu/courses/sem2/ece566/projects/ncstate_ece566_spring2022/"
+alias uvm="cd /home/arvind/ncsu/courses/sem2/ece634-os/cuda/src/nvidia_drv_latest/NVIDIA-Linux-x86_64-510.54/kernel/nvidia-uvm/"
+alias dockb="sudo docker-compose build"
+alias docku="sudo docker-compose up -d"
+alias leet="cd /home/arvind/coding/leetcode"
+alias compproj="cd /home/arvind/ncsu/courses/sem2/ece566/projects/ncstate_ece566_spring2022/projects/p3/C++"
+alias vim="nvim"
+alias llvm-dis-13="llvm-dis"
+alias eso="cd /home/arvind/ncsu/courses/sem2/ece561/ESO-22/Project/"

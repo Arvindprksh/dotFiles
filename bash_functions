@@ -5,7 +5,8 @@ function set-title(){
               ORIG=$PS1
                 fi
                   TITLE="\[\e]2;$*\a\]"
-                    PS1=${ORIG}${TITLE}
+                    #PS1=${ORIG}${TITLE}
+                   # PROMPT_COMMAND='echo -ne "\033]0;${TITLE}\007"'
                 }
 
 function defaultTitle(){
